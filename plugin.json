@@ -1,0 +1,15 @@
+{
+    "type": "ecmascript",
+    "id": "ororo",
+    "file": "ororo.js",
+    "showtimeVersion": "5.0.156",
+    "version": "0.1.9",
+    "author": "czz78",
+    "title": "ororo",
+    "icon": "logo.png",
+    "category": "video",
+    "synopsis": "Movian plugin to watch tv shows from ororo.tv",
+    "description": "<p>Ororo.tv - plugin is the integration of the website ororo.tv.\n\nTV Shows in English with English subtitles<p>",
+    "homepage": "https://github.com/czz/movian-plugin-ororo",
+    "apiversion":2
+}
