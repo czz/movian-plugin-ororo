@@ -84,7 +84,7 @@ new page.Route(plugin.id + ":search:(.*)", function(page, query) {
     page.loading = true;
     setPageHeader(page, decodeURIComponent(query));
 
-    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true, lang: "EN"} );
+    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true } );
     var movies = ororo.movies();
     var shows = ororo.shows();
 
@@ -113,7 +113,7 @@ new page.Route(plugin.id + ":search:(.*)", function(page, query) {
  */
 new page.Route(plugin.id + ":play:(.*):(.*)", function(page, action, id) {
 
-    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true, lang: "EN"} );
+    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true } );
 
     var file;
     if(action == 'show') {
@@ -148,12 +148,13 @@ new page.Route(plugin.id + ":show:(.*):(.*):(.*)", function(page, title, icon, i
     if(episodes) {
         for (var i in episodes) {
 
-
-            episodes[i].icon= decodeURIComponent(icon);
-            page.appendItem(plugin.id + ':play:show:'+ episodes[i].id  , 'video', episodes[i]);
+            (function() {
+                episodes[i].icon= decodeURIComponent(icon);
+                page.appendItem(plugin.id + ':play:show:'+ episodes[i].id  , 'video', episodes[i]);
+                setPageHeader(page,"Shows" + ' ('+ i.toString()+ ' results)');
+            })(i);
         }
 
-        setPageHeader(page,"Shows" + ' ('+ i.toString()+ ' results)');
     }
 
     page.loading = false;
@@ -170,15 +171,16 @@ new page.Route(plugin.id + ":shows", function(page) {
     page.type = "directory";
     page.loading = true;
 
-    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true, lang: "EN"} );
+    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true } );
     var shows = ororo.shows();
 
     if(shows) {
         for (var i in shows) {
-            page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[i].title) + ':' + encodeURIComponent(shows[i].icon) + ':' + shows[i].id  , 'video', shows[i]);
+            (function() {
+                page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[i].title) + ':' + encodeURIComponent(shows[i].icon) + ':' + shows[i].id  , 'video', shows[i]);
+                setPageHeader(page,"Shows" + ' ('+ i.toString()+ ' results)');
+            })(i);
         }
-
-        setPageHeader(page,"Shows" + ' ('+ i.toString()+ ' results)');
     }
 
     page.loading = false;
@@ -199,11 +201,13 @@ new page.Route(plugin.id + ":movies", function(page) {
     var movies = ororo.movies();
 
     if(movies) {
-        for (var i in movies) {
-            page.appendItem(plugin.id + ':play:movie:'+ movies[i].id  , 'video', movies[i]);
-        }
 
-        setPageHeader(page,"Movies" + ' ('+ i.toString()+ ' results)');
+        for ( var i in movies) {
+            (function() {
+                page.appendItem(plugin.id + ':play:movie:'+ movies[i].id  , 'video', movies[i]);
+                setPageHeader(page,"Movies" + ' ('+ i.toString()+ ' results)');
+            })(i);
+        }
     }
 
     page.loading = false;
@@ -217,11 +221,10 @@ new page.Route(plugin.id + ":movies", function(page) {
  */
 new page.Route(plugin.id + ":start", function(page) {
 
-
     setPageHeader(page, 'Ororo Tv');
     page.loading = true;
 
-    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true, lang: "EN"} );
+    var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: true } );
 
     if(ororo.login()){
         page.type = "directory";

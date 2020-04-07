@@ -115,12 +115,11 @@ var OroroApi=(function() {
      *  Private reorder function to match movian array that feed types
      */
     function _reorder(ob, action){
-
         if(action === undefined) action = 'movies';
-
         var subs=[];
 
         for(var i in ob){
+
             // video
             ob[i].title = ob[i].name ? ob[i].name : 'No Title';
             delete ob[i].name;
@@ -153,7 +152,6 @@ var OroroApi=(function() {
                 ob[i].subtitles= subs;
             }
 
-
             // videoparams for series
             if(ob[i].season){
 
@@ -172,12 +170,21 @@ var OroroApi=(function() {
                 }
             }
 
-
-
         }
 
         return ob;
 
+
+    }
+
+
+    function _sortEpisodes(episodes) {
+
+       episodes.sort(function(a, b) {
+            return a.season.number - b.season.number || a.episode.number - b.episode.number;
+        });
+
+        return episodes;
 
     }
 
@@ -232,7 +239,6 @@ var OroroApi=(function() {
             return r;
         }
 
-
         return false;
 
     };
@@ -264,28 +270,17 @@ var OroroApi=(function() {
      */
     OroroApi.prototype.episodes =function (show_id) {
 
-
         var res = _req.call(this,'shows' + '/' + show_id);
         _debug.call(this, JSON.stringify(res), "OroroApi:episodes.show")
-
-        var episodes=[];
 
         if(res){
 
             var e = JSON.parse(res.string);
-            for( var i in e.episodes ) {
-
-                res = _req.call(this,'episodes' + '/' + e.episodes[i].id);
-                _debug.call(this, JSON.stringify(res), "OroroApi:episodes.episodes")
-                r = _reorder.call(this,[JSON.parse(res.string)])[0];
-                _debug.call(this, JSON.stringify(r), "OroroApi:episodes.episodes.reorder")
-                episodes.push(r);
-            }
-
-            return episodes;
+            e = _reorder.call(this,e.episodes);
+           _debug.call(this, JSON.stringify(e), "OroroApi:episodes.reorder")
+            return _sortEpisodes.call(this,e);
 
         }
-
 
         return false;
 
@@ -307,7 +302,6 @@ var OroroApi=(function() {
            _debug.call(this, JSON.stringify(r), "OroroApi:episode.reorder")
             return r;
         }
-
 
         return false;
 
