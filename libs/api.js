@@ -126,8 +126,11 @@ var OroroApi=(function() {
             delete ob[i].name;
             ob[i].backdrop = ob[i].backdrop_url ? ob[i].backdrop_url : '';
             delete ob[i].backdrop_url;
-            ob[i].description = ob[i].desc ? ob[i].desc : '';
-            delete ob[i].desc;
+
+            if(ob[i].desc){
+                ob[i].description = ob[i].desc ? ob[i].desc : '';
+                delete ob[i].desc;
+            }
             ob[i].icon = ob[i].poster_thumb ? ob[i].poster_thumb : '';
             delete ob[i].poster_thumb;
             ob[i].genre = ob[i].array_genres ? ob[i].array_genres.join() : '';
@@ -150,16 +153,28 @@ var OroroApi=(function() {
                 ob[i].subtitles= subs;
             }
 
+
             // videoparams for series
+            if(ob[i].season){
+
+                ob[i].vtype = 'tvseries';
+
+                ob[i].season = {'number': ob[i].season ? parseInt(ob[i].season) : '' };
+
+                if(ob[i].number) {
+                    ob[i].episode = {'title': ob[i].title ? ob[i].title : '' , 'number': ob[i].number ?  parseInt(ob[i].number) : '' };
+                    delete ob[i].number;
+                }
+
+                if(ob[i].plot) {
+                    ob[i].description = ob[i].plot ?  ob[i].plot : '';
+                    delete ob[i].plot;
+                }
+            }
+
 
 
         }
-
-
-        /*vtype (if vtype: 'tvseries' page shows Season and Episode number)
-        season {number: 1}
-        episode {title: 'title', number: 1}
-        */
 
         return ob;
 
