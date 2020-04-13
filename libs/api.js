@@ -31,6 +31,8 @@ var OroroApi=(function() {
     var _CREDENTIALS= { username: false, password:false};
 
 
+    var _ACCOUNT_INFO= {'payed_account': false };
+
     /* construct */
     function OroroApi(credentials, options) {
 
@@ -83,19 +85,20 @@ var OroroApi=(function() {
                                                                                      },
                                                                                      debug: this.options().debug,
                                                                                      compression:true,
+                                                                                     noFail:true,
 
                                 });
 
             if(v){
-                switch(v.codestatus){
+                switch(v.statuscode){
                     case 401:
                         res = {'code': 401, 'string':"Failed to log in"};
                         break;
                     case 402:
-                        res = {'code': 402, 'string':"Free limit reached/api/v2"};
+                        res = {'code': 402, 'string':v.toString()};
                         break;
                     default:
-                        res = {'code': v.codestatus ? v.codestatus : "Unknown", 'string': v.toString()};
+                        res = {'code': v.statuscode ? v.statuscode : "Unknown", 'string': v.toString()};
                         //res = {'code': 200, 'string': v.toString()};
                         break;
                 }
@@ -174,7 +177,6 @@ var OroroApi=(function() {
 
         return ob;
 
-
     }
 
 
@@ -189,6 +191,19 @@ var OroroApi=(function() {
     }
 
 
+    function _sortByTitle(ob) {
+
+       ob.sort(function(a, b){
+           if(a.title < b.title) { return -1; }
+           if(a.title > b.title) { return 1; }
+           return 0;
+        });
+
+        return ob;
+
+    }
+
+
     /*
      *  Check login return bool
      */
@@ -196,8 +211,8 @@ var OroroApi=(function() {
 
         var res = _req.call(this,'movies/25');
         _debug.call(this, JSON.stringify(res), "OroroApi:login")
-        if(res) return true
-        return false;
+        if(res) return {'logged_in':true, 'info': res.string }
+        return {'logged_in':true, 'info': "Not logged in" };
 
     };
 
@@ -215,6 +230,7 @@ var OroroApi=(function() {
             var r = JSON.parse(res.string);
             r = _reorder.call(this,r.movies);
            _debug.call(this, JSON.stringify(r), "OroroApi:movies.reorder")
+            r = _sortByTitle.call(this,r);
             return r;
         }
 
@@ -257,6 +273,7 @@ var OroroApi=(function() {
             var r = JSON.parse(res.string);
             r = _reorder.call(this,r.shows);
            _debug.call(this, JSON.stringify(r), "OroroApi:shows.reorder")
+            r = _sortByTitle.call(this,r);
             return r;
         }
 
