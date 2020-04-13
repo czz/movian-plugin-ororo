@@ -294,14 +294,23 @@ new page.Route(plugin.id + ":start", function(page) {
         page.type = "directory";
         page.model.contents= 'grid';
 
-        page.appendItem(plugin.id + ":search:all:", 'search', {
-            title: "Search..."
-        });
 
-        page.appendPassiveItem('separator','',{title: ''});
-        page.appendItem(plugin.id + ':movies' , 'directory', {title:'Movies', icon: Plugin.path+ "images/vod.png"} );
-        page.appendItem(plugin.id + ':shows' , 'directory', {title: 'Series', icon: Plugin.path+ "images/series.png"} );
 
+        if(ororo_login.info=="Not logged in") {
+              ororo_login.info += ",  use login button on right menu.\n";
+              page.model.contents= 'list';
+              page.appendItem(plugin.id + ':start' , 'directory', {title:'reload', icon: Plugin.path+ "images/reload.png"} );
+        }
+        else {
+
+            page.appendItem(plugin.id + ":search:all:", 'search', {
+                title: "Search..."
+            });
+
+            page.appendPassiveItem('separator','',{title: ''});
+            page.appendItem(plugin.id + ':movies' , 'directory', {title:'Movies', icon: Plugin.path+ "images/vod.png"} );
+            page.appendItem(plugin.id + ':shows' , 'directory', {title: 'Series', icon: Plugin.path+ "images/series.png"} );
+        }
         page.appendPassiveItem('separator','',{title: ororo_login.info});
 
 
