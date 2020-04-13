@@ -211,8 +211,9 @@ var OroroApi=(function() {
 
         var res = _req.call(this,'movies/25');
         _debug.call(this, JSON.stringify(res), "OroroApi:login")
+        if(res.code == 200) return {'logged_in':true, 'info': 'Payed account' }
         if(res) return {'logged_in':true, 'info': res.string }
-        return {'logged_in':true, 'info': "Not logged in" };
+        return {'logged_in':false, 'info': "Not logged in" };
 
     };
 

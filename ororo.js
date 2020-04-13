@@ -311,7 +311,7 @@ new page.Route(plugin.id + ":start", function(page) {
             page.appendItem(plugin.id + ':movies' , 'directory', {title:'Movies', icon: Plugin.path+ "images/vod.png"} );
             page.appendItem(plugin.id + ':shows' , 'directory', {title: 'Series', icon: Plugin.path+ "images/series.png"} );
         }
-        page.appendPassiveItem('separator','',{title: ororo_login.info});
+        page.appendPassiveItem('separator','',{title: ororo_login.info ?  ororo_login.info : 'Payed account'});
 
 
     }
