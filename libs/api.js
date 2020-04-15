@@ -126,8 +126,11 @@ var OroroApi=(function() {
             // video
             ob[i].title = ob[i].name ? ob[i].name : 'No Title';
             delete ob[i].name;
-            ob[i].backdrop = ob[i].backdrop_url ? ob[i].backdrop_url : '';
+            ob[i].background = ob[i].backdrop_url ? ob[i].backdrop_url : false;
+            if(!ob[i].background) ob[i].background = ob[i].poster ? ob[i].poster : '';
+            ob[i].backgdrops = ob[i].backdrop_url ? ob[i].backdrop_url : '';
             delete ob[i].backdrop_url;
+            delete ob[i].poster;
 
             if(ob[i].desc){
                 ob[i].description = ob[i].desc ? ob[i].desc : '';

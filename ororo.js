@@ -109,7 +109,7 @@ new page.Route(plugin.id + ":search:(.*):(.*)", function(page, action, query) {
         for(var i in shows){
             var re = new RegExp(query, "i");
             if(re.exec(shows[i].title)){
-                page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[i].title) + ':' + encodeURIComponent(shows[i].icon) + ':' + shows[i].id  , 'video', shows[i]);
+                page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[i].title) + ':' + encodeURIComponent(shows[i].icon) + ':' + encodeURIComponent(shows[i].background) + ':' + shows[i].id  , 'video', shows[i]);
             }
         }
     }
@@ -146,11 +146,14 @@ new page.Route(plugin.id + ":play:(.*):(.*)", function(page, action, id) {
 /*
  *  Show
  */
-new page.Route(plugin.id + ":show:(.*):(.*):(.*)", function(page, title, icon, id) {
+new page.Route(plugin.id + ":show:(.*):(.*):(.*):(.*)", function(page, title, icon, background, id) {
 
     setPageHeader(page, decodeURIComponent(title));
     page.type = "directory";
     page.loading = true;
+    page.metadata.backgroundAvailable=true;
+    page.metadata.backgroundAlpha=0.9;
+    page.metadata.background = decodeURIComponent(background);
 
     var ororo = new OroroApi({username : decodeURIComponent(credentials.username),password: decodeURIComponent(credentials.password)} , { debug: DEBUG } );
     var episodes = ororo.episodes(id);
@@ -208,7 +211,7 @@ new page.Route(plugin.id + ":shows", function(page) {
         setPageHeader(page,"Shows" + ' ('+ shows.length.toString()+ ' results)');
         var offset = 0;
 
-        function loader() {
+        function loader(e) {
 
             if(offset > shows.length) {
                 page.haveMore(false);
@@ -216,7 +219,8 @@ new page.Route(plugin.id + ":shows", function(page) {
             }
 
             for(var i = 0; i < 20; i++) {
-                page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[offset+i].title) + ':' + encodeURIComponent(shows[offset+i].icon) + ':' + shows[offset+i].id  , 'video', shows[offset+i]);
+                page.appendItem(plugin.id + ':show:' + encodeURIComponent(shows[offset+i].title) + ':' + encodeURIComponent(shows[offset+i].icon) + ':' + encodeURIComponent(shows[offset+i].background) + ':' + shows[offset+i].id  , 'video', shows[offset+i]);
+
             }
             offset += 20;
             page.haveMore(true);
@@ -224,6 +228,7 @@ new page.Route(plugin.id + ":shows", function(page) {
         }
 
     }
+
 
     page.type = "directory";
     page.asyncPaginator = loader;
