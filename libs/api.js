@@ -151,6 +151,8 @@ var OroroApi=(function() {
             ob[i].imdbid = ob[i].imdb_id ?  'tt'+ob[i].imdb_id : '';
             delete ob[i].imdb_id;
 
+            ob[i].rating = ob[i].imdb_rating ? ob[i].imdb_rating*10 : 0;
+
             if(ob[i].subtitles) {
                 for(var k in ob[i].subtitles) {
                     subs.push({'url': ob[i].subtitles[k].url, 'title': ob[i].subtitles[k].lang, 'language': ob[i].subtitles[k].lang});
