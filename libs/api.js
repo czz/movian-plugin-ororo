@@ -148,7 +148,7 @@ var OroroApi=(function() {
             ob[i].sources = [ { 'url': ob[i].url ?  ob[i].url : ''} ];
             delete ob[i].url;
 
-            ob[i].imdbid = [ { 'url': ob[i].imdb_id ?  ob[i].imdb_id : ''} ];
+            ob[i].imdbid = ob[i].imdb_id ?  'tt'+ob[i].imdb_id : '';
             delete ob[i].imdb_id;
 
             if(ob[i].subtitles) {
